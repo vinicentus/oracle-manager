@@ -18,8 +18,8 @@ contract UserManager {
         return users[user];
     }
 
-    // ADD NEW USER
-    function add() public {
+    // CREATE NEW USER
+    function create() public {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
         // IF THE USER DOES NOT EXIST
@@ -30,7 +30,7 @@ contract UserManager {
         users[msg.sender] = new User(task_manager);
     }
 
-    // SET STATIC VARIABLES
+    // INITIALIZE THE CONTRACT
     function init(address _task_manager) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED

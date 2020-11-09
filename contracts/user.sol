@@ -3,42 +3,16 @@ pragma solidity ^0.7.0;
 
 contract User {
 
-    // CURRENT REPUTATION
-    uint public reputation = 1;
-
-    // ITERABLE LIST OF TASK RESULTS
-    address[] public results;
-
     // TASK MANAGER REFERENCE
     address task_manager;
 
-    // VALUE CHANGED EVENT
-    event changes(
-        address[] results,
-        uint reputation
-    );
+    // CURRENT REPUTATION & AWARD EVENT
+    uint public reputation = 1;
+    event awarded(uint reputation);
 
     // WHEN CREATED, SET TASK MANAGER REFERENCE
     constructor(address _task_manager) {
         task_manager = _task_manager;
-    }
-
-    // FETCH CONTRACT DETAILS
-    function details() public view returns(address[] memory, uint) {
-        return (results, reputation);
-    }
-
-    // ADD TASK RESULT
-    function add_result(address task) public {
-
-        // IF SENDER IS THE TASK MANAGER
-        require(msg.sender == task_manager, 'permission denied');
-
-        // PUSH TO RESULTS
-        results.push(task);
-
-        // EMIT ASYNC EVENT
-        emit changes(results, reputation);
     }
 
     // INCREASE REPUTATION
@@ -51,6 +25,6 @@ contract User {
         reputation += amount;
 
         // EMIT ASYNC EVENT
-        emit changes(results, reputation);
+        emit awarded(reputation);
     }
 }

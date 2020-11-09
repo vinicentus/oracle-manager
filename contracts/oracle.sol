@@ -9,6 +9,9 @@ contract Oracle {
     address public oracle_manager;
     address public task_manager;
 
+    // SERVICE TOKEN PRICE
+    uint public price;
+
     // ITERABLE ASSIGNMENT BACKLOG
     address[] public backlog;
 
@@ -27,7 +30,8 @@ contract Oracle {
     event modification();
 
     // SET ADDRESS REFERENCES
-    constructor(address _owner, address _task_manager) {
+    constructor(uint _price, address _owner, address _task_manager) {
+        price = _price;
         owner = _owner;
         task_manager = _task_manager;
     }
@@ -94,13 +98,13 @@ contract Oracle {
     }
 
     // ASSIGN TASK TO DEVICE
-    function add_task(address assignment) public {
+    function assign_task(address task) public {
 
         // IF THE SENDER IS THE TASK MANAGER
         require(msg.sender == task_manager, 'permission denied');
 
         // ADD TASK TO BACKLOG
-        backlog.push(assignment);
+        backlog.push(task);
 
         // EMIT CONTRACT MODIFIED EVENT
         emit modification();

@@ -12,9 +12,9 @@ contract TokenManager {
     uint public capacity;
     uint public sold = 0;
 
-    // INIT STATUS & ORACLE MANAGER REFERENCE
+    // INIT STATUS & TASK MANAGER REFERENCE
     bool public initialized = false;
-    address public oracle_manager;
+    address public task_manager;
 
     // VALUE CHANGE EVENT
     event changes(
@@ -60,9 +60,9 @@ contract TokenManager {
     function consume(uint amount, address user) public {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
-        // IF THE CALLER IS THE ORACLE MANAGER CONTRACT
+        // IF THE CALLER IS THE TASK MANAGER
         require(initialized, 'contract has not been initialized');
-        require(msg.sender == oracle_manager, 'permission denied');
+        require(msg.sender == task_manager, 'permission denied');
 
         // FIX FOR OVERFLOW
         uint sum = tokens[user] - amount;
@@ -78,13 +78,13 @@ contract TokenManager {
         emit changes(capacity, sold);
     }
 
-    // SEIZE ASSIGNMENT TOKENS
-    function seize(uint amount, address from, address to) public {
+    // TRANSFER TOKEN TOKENS
+    function transfer(uint amount, address from, address to) public {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
         // IF THE SENDER HAS ENOUGH TOKENS TO TRANSFER
         require(initialized, 'contract has not been initialized');
-        require(msg.sender == oracle_manager, 'permission denied');
+        require(msg.sender == task_manager, 'permission denied');
 
         // FIX FOR OVERFLOW & UNDERFLOW
         uint sum_from = tokens[from] - amount;
@@ -99,12 +99,12 @@ contract TokenManager {
         tokens[to] += amount;
     }
 
-    // SET STATIC VARIABLES
+    // INITIALIZE THE CONTRACT
     function init(
         string memory _symbol,
         uint _price,
         uint _capacity,
-        address _oracle_manager
+        address _task_manager
     ) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED BEFORE
@@ -116,7 +116,7 @@ contract TokenManager {
         capacity = _capacity;
 
         // SET ORACLE MANAGER REFERENCE
-        oracle_manager = _oracle_manager;
+        task_manager = _task_manager;
 
         // BLOCK FURTHER MODIFICATIONS
         initialized = true;

@@ -34,7 +34,7 @@ contract OracleManager {
     }
 
     // CREATE NEW ORACLE
-    function create(string memory id) public {
+    function create(string memory id, uint price) public {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
         // IF THE USER IS REGISTERED
@@ -45,6 +45,7 @@ contract OracleManager {
 
         // INSTATIATE & INDEX NEW ORACLE
         oracles[id] = new Oracle(
+            price,
             msg.sender,
             task_manager
         );

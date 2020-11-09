@@ -5,42 +5,27 @@ contract Task {
 
     // RELATED PARTIES
     address public creator;
-    string public device;
     address public task_manager;
+    string public oracle;
 
     // TASK DETAILS
-    string public service;
-    uint public reward;
-    string public encryption;
     uint256 public expires;
+    uint public reward;
 
-    // CONTRACT INDEXING
-    uint public device_index;
-    uint public task_index;
-
-    // DESTROYED EVENT
+    // SELF DESTRUCTION EVENT
     event destroyed();
 
-    // WHEN CREATED
-    constructor(
-        address _creator,
-        string memory _service,
-        string memory _device,
-        uint _reward,
-        string memory _encryption,
-        uint timelimit
-    ) {
+    // WHEN CREATED..
+    constructor(address _creator, string memory _oracle, uint _timelimit, uint _reward) {
 
-        // SET PARTY PARAMS
+        // SET REFERENCES
         creator = _creator;
-        service = _service;
-        device = _device;
-        encryption = _encryption;
         task_manager = msg.sender;
+        oracle = _oracle;
 
-        // SET REWARD & EXPIRATION BLOCK
+        // SET TASK DETAILS
+        expires = block.number + _timelimit;
         reward = _reward;
-        expires = block.number + timelimit;
     }
 
     // SELF DESTRUCT
