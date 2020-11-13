@@ -6,7 +6,6 @@ contract Oracle {
 
     // ADDRESS REFERENCES
     address public owner;
-    address public oracle_manager;
     address public task_manager;
 
     // SERVICE TOKEN PRICE
@@ -20,7 +19,7 @@ contract Oracle {
     bool public discoverable;
 
     // DISCOVERY CONFIGURATION
-    string public discovery;
+    string public config;
 
     // NUMBER OF COMPLETED ASSIGNMENTS
     uint public completed;
@@ -42,7 +41,7 @@ contract Oracle {
             owner,
             active,
             discoverable,
-            discovery,
+            config,
             completed,
             backlog
         );
@@ -59,13 +58,13 @@ contract Oracle {
     }
 
     // UPDATE DEVICE DISCOVERY CONFIG
-    function update_discovery(string memory data) public {
+    function update_config(string memory data) public {
 
         // IF THE SENDER IS THE DEVICE ORACLES OWNER
         require(msg.sender == owner, 'permission denied');
 
         // SAVE THE NEW CONFIG IN THE CONTRACT
-        discovery = data;
+        config = data;
 
         // EMIT CONTRACT MODIFIED EVENT
         emit modification();

@@ -5,7 +5,7 @@ rm -rf build/
 truffle migrate --network development
 
 # COPY REFERENCES TO THE OTHER PROJECTS
-# node ./scripts/transfer.js
+node ./scripts/transfer.js
 
 # CLEAN UP GARBAGE
 rm -rf build/

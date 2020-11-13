@@ -1,10 +1,11 @@
 module.exports = {
    networks: {
       development: {
-         host: '127.0.0.1',
-         port: 8545,
+         host: '192.168.88.128',
+         port: 8080,
          network_id: "*", // Match any network id
-         gas: 5000000
+         gas: 5000000,
+         websockets: true
       }
    },
    compilers: {

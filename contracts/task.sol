@@ -12,11 +12,14 @@ contract Task {
     uint256 public expires;
     uint public reward;
 
+    // EXECUTION PARAMS
+    string public params;
+
     // SELF DESTRUCTION EVENT
     event destroyed();
 
     // WHEN CREATED..
-    constructor(address _creator, string memory _oracle, uint _timelimit, uint _reward) {
+    constructor(address _creator, string memory _oracle, uint _timelimit, uint _reward, string memory _params) {
 
         // SET REFERENCES
         creator = _creator;
@@ -26,6 +29,7 @@ contract Task {
         // SET TASK DETAILS
         expires = block.number + _timelimit;
         reward = _reward;
+        params = _params;
     }
 
     // SELF DESTRUCT

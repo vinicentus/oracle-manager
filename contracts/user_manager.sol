@@ -24,7 +24,7 @@ contract UserManager {
         // IF THE CONTRACT HAS BEEN INITIALIZED
         // IF THE USER DOES NOT EXIST
         require(initialized, 'contract has not been initialized');
-        require(!exists(msg.sender), 'address is already registered');
+        require(!exists(msg.sender), 'wallet is already registered');
 
         // PUSH ENTRY TO BOTH CONTAINERS
         users[msg.sender] = new User(task_manager);

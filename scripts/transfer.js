@@ -6,14 +6,13 @@ const promises = [];
 
 // SPECIFY FILES & RUN
 run([
-   'Device',
-   'DeviceManager',
+   'Oracle',
+   'OracleManager',
    'Task',
    'TaskManager',
    'User',
    'UserManager',
-   'TokenManager',
-   'ServiceManager'
+   'TokenManager'
 ]);
 
 // RUN THE TRANSFER
@@ -31,17 +30,10 @@ function run(files) {
       const stringified = JSON.stringify(response);
 
       // THEN OVERWRITE THE REFS FILE
-      fs.writeFile("../../electron/distributed-task-manager/src/latest.json", stringified, (err) => {
+      fs.writeFile("../../python/iot-manager/config/latest.json", stringified, (err) => {
 
          if (err) console.log(err);
-         console.log("REWROTE LATEST IN APP!");
-
-         // THEN OVERWRITE THE REFS FILE
-         fs.writeFile("../../python/iot-manager/config/latest.json", stringified, (err) => {
-
-            if (err) console.log(err);
-            console.log("REWROTE LATEST IN MIDDLEWARE!");
-         });
+         console.log("REWROTE LATEST IN MIDDLEWARE!");
       });
    });
 }

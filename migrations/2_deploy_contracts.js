@@ -1,6 +1,7 @@
 const contracts = [
     'UserManager',
     'OracleManager',
+    'TaskManager',
     'TokenManager',
 ]
 

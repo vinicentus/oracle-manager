@@ -36,7 +36,7 @@ contract TaskManager {
     }
 
     // CREATE NEW TASK
-    function create(string memory _oracle, uint _timelimit) public {
+    function create(string memory _oracle, uint _timelimit, string memory _params) public returns(address) {
 
         // IF CONTRACT HAS BEEN INITIALIZED
         // SENDER IS A REGISTERED USER
@@ -60,7 +60,8 @@ contract TaskManager {
             msg.sender,
             _oracle,
             _timelimit,
-            oracle_price + oracle_price / 2
+            oracle_price + oracle_price / 2,
+            _params
         );
 
         // INDEX THE TASK
@@ -75,6 +76,8 @@ contract TaskManager {
         // SEIZE TOKENS FROM BOTH PARTIES
         token_manager.transfer(oracle_price, msg.sender, address(this));
         token_manager.transfer(oracle_price / 2, oracle_owner, address(this));
+
+        return address(task);
     }
 
     // COMPLETE A TASK
