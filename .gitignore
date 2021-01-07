@@ -2,8 +2,10 @@
 /node_modules
 /.pnp
 .pnp.js
-
 package-lock.json
+
+# NOTEBOOK CHECKPOINTS
+.ipynb_checkpoints
 
 # testing
 /coverage
