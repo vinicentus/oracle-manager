@@ -8,8 +8,8 @@ contract TokenManager {
 
     // TOKEN DETAILS
     string public symbol;
-    uint public price;
-    uint public capacity;
+    uint public price = 0;
+    uint public capacity = 0;
     uint public sold = 0;
 
     // INIT STATUS & TASK MANAGER REFERENCE
@@ -25,11 +25,6 @@ contract TokenManager {
     // FETCH USER TOKEN BALANCE
     function balance(address user) public view returns(uint) {
         return tokens[user];
-    }
-
-    // FETCH TOKEN DETAILS
-    function details() public view returns(string memory, uint, uint, uint) {
-        return (symbol, price, capacity, sold);
     }
 
     // PURCHASE TOKENS
@@ -50,7 +45,7 @@ contract TokenManager {
         tokens[msg.sender] += amount;
 
         // INCREMENT SOLD
-        sold = sold + amount;
+        sold += amount;
 
         // EMIT ASYNC EVENT
         emit changes(capacity, sold);
@@ -72,7 +67,7 @@ contract TokenManager {
         tokens[user] -= amount;
 
         // MAKE TOKEN AVAILABLE FOR PURCHASE
-        sold = sold - amount;
+        sold -= amount;
 
         // EMIT ASYNC EVENT
         emit changes(capacity, sold);

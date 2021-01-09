@@ -20,9 +20,6 @@ contract OracleManager {
     // INIT STATUS
     bool public initialized = false;
 
-    // ORACLE ADDED TO USER EVENT
-    event oracle_added(address user, string[] collection);
-
     // FETCH ORACLE BY ID
     function fetch_oracle(string memory id) public view returns(Oracle) {
         return oracles[id];
@@ -52,9 +49,6 @@ contract OracleManager {
 
         // PUSH INTO SENDERS COLLECTION
         collections[msg.sender].push(id);
-
-        // TRIGGER ASYNC EVENT TO SUBSCRIBERS
-        emit oracle_added(msg.sender, collections[msg.sender]);
     }
 
     // INITIALIZE THE CONTRACT
