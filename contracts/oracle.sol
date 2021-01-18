@@ -35,16 +35,9 @@ contract Oracle {
         task_manager = _task_manager;
     }
 
-    // FETCH CONTRACT DETAILS
-    function details() public view returns(address, bool, bool, string memory, uint, address[] memory) {
-        return (
-            owner,
-            active,
-            discoverable,
-            config,
-            completed,
-            backlog
-        );
+    // FETCH TASK BACKLOG
+    function fetch_backlog() public view returns(address[] memory) {
+        return backlog;
     }
 
     // UPDATE DEVICE MIDDLEWARE

@@ -13,7 +13,7 @@ import json
 # In[59]:
 
 
-path = '/home/wickstjo/coding/ethereum/oracle-manager/build/contracts/'
+path = '/home/wickstjo/coding/ethereum/thesis-contracts/build/contracts/'
 
 
 # In[60]:
@@ -85,8 +85,8 @@ def save_json(data, path):
 
 
 repos = [
-    '/home/wickstjo/coding/python/iot-manager/config/',
-    '/home/wickstjo/coding/react/new-thesis/src/resources/'
+    '/home/wickstjo/coding/python/thesis-middleware/resources/',
+    '/home/wickstjo/coding/react/thesis-app/src/resources/'
 ]
 
 

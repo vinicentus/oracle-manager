@@ -12,9 +12,16 @@ contract TaskManager {
 
     // MAP OF ALL TASKS, [ADDRESS => CONTRACT]
     mapping (address => Task) public tasks;
+    
+    // PENDING & COMPLETED TASKS FOR EACH USER -- REPLACED RESULTS
+    mapping (address => address[]) public pending;
+    mapping (address => result[]) public completed;
 
-    // MAP OF ALL TASK RESULTS, [ADDRESS => STRING]
-    mapping (address => string) public results;
+    // TASK RESULT OBJECT
+    struct result {
+        address task;
+        string data;
+    }
 
     // TOKEN FEE FOR TASK CREATION
     uint public fee;
@@ -25,18 +32,26 @@ contract TaskManager {
     OracleManager public oracle_manager;
     TokenManager public token_manager;
 
+    // MODIFICATION EVENT
+    event modification();
+
     // FETCH TASK
     function fetch_task(address task) public view returns(Task) {
         return tasks[task];
     }
 
-    // FETCH TASK RESULT
-    function fetch_result(address task) public view returns(string memory) {
-        return results[task];
+    // FETCH USER RELATED TASK LISTS
+    function fetch_lists(address user) public view returns(address[] memory, result[] memory) {
+        return (pending[user], completed[user]);
     }
 
     // CREATE NEW TASK
-    function create(string memory _oracle, uint _timelimit, string memory _params) public returns(address) {
+    function create(
+        string memory _oracle,
+        uint _reward,
+        uint _timelimit,
+        string memory _params
+    ) public {
 
         // IF CONTRACT HAS BEEN INITIALIZED
         // SENDER IS A REGISTERED USER
@@ -51,21 +66,32 @@ contract TaskManager {
         uint oracle_price = oracle_manager.fetch_oracle(_oracle).price();
         address oracle_owner = oracle_manager.fetch_oracle(_oracle).owner();
 
-        // CHECK IF BOTH PARTIES OWN ENOUGH TOKENS
-        require(token_manager.balance(msg.sender) >= oracle_price + fee, 'you have insufficient tokens');
-        require(token_manager.balance(oracle_owner) >= oracle_price / 2, 'oracle owner has insufficient tokens');
+        // MAKE SURE THE PROVIDED REWARD IS SUFFICIENT
+        require(_reward >= oracle_price, 'the reward must be higher or equal to the oracles service cost');
+
+        // IF THE SENDER & ORACLE OWNER ARE THE SAME, 
+        if (msg.sender == oracle_owner) {
+            uint total = _reward + fee + (_reward / 2);
+            require(token_manager.balance(oracle_owner) >= total, 'you have insufficient tokens');
+        
+        // OTHERWISE, CHECK THE BALANCE OF BOTH PARTICIPANTS
+        } else {
+            require(token_manager.balance(msg.sender) >= _reward + fee, 'you have insufficient tokens');
+            require(token_manager.balance(oracle_owner) >= _reward / 2, 'oracle owner has insufficient tokens');
+        }
 
         // INSTANTIATE NEW TASK
         Task task = new Task(
             msg.sender,
             _oracle,
             _timelimit,
-            oracle_price + oracle_price / 2,
+            _reward + _reward / 2,
             _params
         );
 
-        // INDEX THE TASK
+        // INDEX THE TASK & ADD TO PENDING
         tasks[address(task)] = task;
+        pending[msg.sender].push(address(task));
 
         // ASSIGN TASK TO THE DEVICE
         oracle_manager.fetch_oracle(_oracle).assign_task(address(task));
@@ -74,10 +100,11 @@ contract TaskManager {
         token_manager.consume(fee, msg.sender);
 
         // SEIZE TOKENS FROM BOTH PARTIES
-        token_manager.transfer(oracle_price, msg.sender, address(this));
-        token_manager.transfer(oracle_price / 2, oracle_owner, address(this));
+        token_manager.transfer(_reward, msg.sender, address(this));
+        token_manager.transfer(_reward / 2, oracle_owner, address(this));
 
-        return address(task);
+        // EMIT CONTRACT MODIFIED EVENT
+        emit modification();
     }
 
     // COMPLETE A TASK
@@ -94,10 +121,16 @@ contract TaskManager {
         // IF THE DEVICE OWNER IS THE SENDER
         require(msg.sender == oracle_owner, 'you are not the oracles owner');
 
-        // SAVE THE RESULT
-        results[_task] = _data;
+        // REMOVE FROM PENDING
+        clear_task(msg.sender, _task);
 
-        // RELEASE SEIZED TOKENS TO THE ORACLE OWNER
+        // SAVE IN COMPLETED
+        completed[msg.sender].push(result({
+            task: address(task),
+            data: _data
+        }));
+
+        // RELEASE SEIZED TOKEN REWARD
         token_manager.transfer(
             task.reward(),
             address(this),
@@ -113,6 +146,9 @@ contract TaskManager {
 
         // SELF DESTRUCT THE TASK
         task.destroy();
+
+        // EMIT CONTRACT MODIFIED EVENT
+        emit modification();
     }
 
     // RETIRE AN INCOMPLETE TASK
@@ -136,11 +172,17 @@ contract TaskManager {
             task.creator()
         );
 
+        // REMOVE TASK FROM PENDING
+        clear_task(task.creator(), _task);
+
         // REMOVE TASK FROM THE ORACLES BACKLOG
         oracle_manager.fetch_oracle(task.oracle()).clear_task(_task, 0);
 
         // SELF DESTRUCT THE TASK
         task.destroy();
+
+        // EMIT CONTRACT MODIFIED EVENT
+        emit modification();
     }
 
     // INITIALIZE THE CONTRACT
@@ -172,6 +214,19 @@ contract TaskManager {
             return true;
         } else {
             return false;
+        }
+    }
+
+    // CLEAR TASK FROM PENDING
+    function clear_task(address user, address task) private {
+
+        // LOOP & FIND
+        for(uint index = 0; index < pending[user].length; index++) {
+            if (address(pending[user][index]) == task) {
+
+                // DELETE THE ASSIGNMENT & INCREMENT COMPLETED
+                delete pending[user][index];
+            }
         }
     }
 }

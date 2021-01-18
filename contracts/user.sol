@@ -4,7 +4,7 @@ pragma solidity ^0.7.0;
 contract User {
 
     // TASK MANAGER REFERENCE
-    address task_manager;
+    address public task_manager;
 
     // CURRENT REPUTATION & AWARD EVENT
     uint public reputation = 1;
