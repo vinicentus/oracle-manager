@@ -32,8 +32,11 @@ contract TaskManager {
     OracleManager public oracle_manager;
     TokenManager public token_manager;
 
-    // MODIFICATION EVENT
-    event modification();
+    // MODIFICATION EVENTS
+    event task_created(address indexed task);
+    event task_completed(address indexed task, string data);
+    event task_retired(address indexed task);
+    event task_cleared(address indexed task, address indexed user);
 
     // FETCH TASK
     function fetch_task(address task) public view returns(Task) {
@@ -104,7 +107,7 @@ contract TaskManager {
         token_manager.transfer(_reward / 2, oracle_owner, address(this));
 
         // EMIT CONTRACT MODIFIED EVENT
-        emit modification();
+        emit task_created(address(task));
     }
 
     // COMPLETE A TASK
@@ -148,7 +151,7 @@ contract TaskManager {
         task.destroy();
 
         // EMIT CONTRACT MODIFIED EVENT
-        emit modification();
+        emit task_completed(_task, _data);
     }
 
     // RETIRE AN INCOMPLETE TASK
@@ -182,7 +185,7 @@ contract TaskManager {
         task.destroy();
 
         // EMIT CONTRACT MODIFIED EVENT
-        emit modification();
+        emit task_retired(_task);
     }
 
     // INITIALIZE THE CONTRACT
@@ -226,6 +229,7 @@ contract TaskManager {
 
                 // DELETE THE ASSIGNMENT & INCREMENT COMPLETED
                 delete pending[user][index];
+                emit task_cleared(user, task);
             }
         }
     }

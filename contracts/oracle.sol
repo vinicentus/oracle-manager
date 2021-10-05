@@ -26,6 +26,7 @@ contract Oracle {
 
     // EVENTS
     event middleware();
+    // TODO: break up into more events, or include details about what actually happened
     event modification();
 
     // SET ADDRESS REFERENCES
