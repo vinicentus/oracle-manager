@@ -38,6 +38,9 @@ contract TaskManager {
     event task_retired(address indexed task);
     event task_cleared(address indexed task, address indexed user);
 
+    // LEGACY EVENT, NEEDED FOR OLD distributed-task-manager UI
+    event modification();
+
     // FETCH TASK
     function fetch_task(address task) public view returns(Task) {
         return tasks[task];
@@ -108,6 +111,8 @@ contract TaskManager {
 
         // EMIT CONTRACT MODIFIED EVENT
         emit task_created(address(task));
+        // LEGACY EVENT, see declaration for details
+        emit modification();
     }
 
     // COMPLETE A TASK
@@ -152,6 +157,8 @@ contract TaskManager {
 
         // EMIT CONTRACT MODIFIED EVENT
         emit task_completed(_task, _data);
+        // LEGACY EVENT, see declaration for details
+        emit modification();
     }
 
     // RETIRE AN INCOMPLETE TASK
@@ -186,6 +193,8 @@ contract TaskManager {
 
         // EMIT CONTRACT MODIFIED EVENT
         emit task_retired(_task);
+        // LEGACY EVENT, see declaration for details
+        emit modification();
     }
 
     // INITIALIZE THE CONTRACT
