@@ -1,16 +1,18 @@
 module.exports = {
     networks: {
         development: {
-            host: '127.0.0.1',
-            port: 8080,
-            network_id: "*", // Match any network id
-            gas: 5000000,
-            websockets: true
+            host: '192.168.13.203',
+            port: 8550,
+            network_id: "11865", // "*" means match any network id
+            gas: 4500000,
+            websockets: false,
+            from: "1e0dddfa3ad438a204ea08864f85bfb7615a83a3"
         }
     },
     compilers: {
         solc: {
-            version: "0.7.0",
+            // TODO: bump to 8.8
+            version: "0.7.6",
             settings: {
                 optimizer: {
                     enabled: true, // Default: false
