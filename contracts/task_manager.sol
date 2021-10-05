@@ -36,7 +36,6 @@ contract TaskManager {
     event task_created(address indexed task);
     event task_completed(address indexed task, string data);
     event task_retired(address indexed task);
-    event task_cleared(address indexed task, address indexed user);
 
     // LEGACY EVENT, NEEDED FOR OLD distributed-task-manager UI
     event modification();
@@ -238,7 +237,6 @@ contract TaskManager {
 
                 // DELETE THE ASSIGNMENT & INCREMENT COMPLETED
                 delete pending[user][index];
-                emit task_cleared(user, task);
             }
         }
     }
