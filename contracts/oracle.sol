@@ -4,9 +4,6 @@ pragma experimental ABIEncoderV2;
 
 contract Oracle {
 
-    //TODO: store ID here
-    string public info;
-
     // ADDRESS REFERENCES
     address public owner;
     address public task_manager;
@@ -29,8 +26,7 @@ contract Oracle {
     event modification();
 
     // SET ADDRESS REFERENCES
-    constructor(string memory _info, uint _price, address _owner, address _task_manager ) {
-        info = _info;
+    constructor(uint _price, address _owner, address _task_manager) {
         price = _price;
         owner = _owner;
         task_manager = _task_manager;

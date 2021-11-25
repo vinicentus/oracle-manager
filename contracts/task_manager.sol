@@ -52,7 +52,7 @@ contract TaskManager {
 
     // CREATE NEW TASK
     function create(
-        address _oracle,
+        string memory _oracle,
         uint _reward,
         uint _timelimit,
         string memory _params
@@ -122,7 +122,7 @@ contract TaskManager {
 
         // EXTRACT TASK & ORACLE INFO
         Task task = fetch_task(_task);
-        address oracle = task.oracle();
+        string memory oracle = task.oracle();
         address oracle_owner = oracle_manager.fetch_oracle(oracle).owner();
 
         // IF THE DEVICE OWNER IS THE SENDER
