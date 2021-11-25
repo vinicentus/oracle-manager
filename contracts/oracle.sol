@@ -19,10 +19,6 @@ contract Oracle {
 
     // DEVICE STATUS
     bool public active;
-    bool public discoverable;
-
-    // DISCOVERY CONFIGURATION
-    string public config;
 
     // NUMBER OF COMPLETED ASSIGNMENTS
     uint public completed;
@@ -55,19 +51,6 @@ contract Oracle {
         emit middleware();
     }
 
-    // UPDATE DEVICE DISCOVERY CONFIG
-    function update_config(string memory data) public {
-
-        // IF THE SENDER IS THE DEVICE ORACLES OWNER
-        require(msg.sender == owner, 'permission denied');
-
-        // SAVE THE NEW CONFIG IN THE CONTRACT
-        config = data;
-
-        // EMIT CONTRACT MODIFIED EVENT
-        emit modification();
-    }
-
     // TOGGLE ACTIVE STATUS
     function toggle_active() public {
 
@@ -76,19 +59,6 @@ contract Oracle {
 
         // TOGGLE STATUS
         active = !active;
-
-        // EMIT CONTRACT MODIFIED EVENT
-        emit modification();
-    }
-
-    // TOGGLE DISCOVERABLE STATUS
-    function toggle_discoverable() public {
-
-        // IF THE SENDER IS THE ORACLES OWNER
-        require(msg.sender == owner, 'permission denied');
-
-        // TOGGLE STATUS
-        discoverable = !discoverable;
 
         // EMIT CONTRACT MODIFIED EVENT
         emit modification();
