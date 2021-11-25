@@ -6,7 +6,7 @@ contract Task {
     // RELATED PARTIES
     address public creator;
     address public task_manager;
-    string public oracle;
+    address public oracle;
 
     // TASK DETAILS
     uint256 public expires;
@@ -19,7 +19,7 @@ contract Task {
     event destroyed();
 
     // WHEN CREATED..
-    constructor(address _creator, string memory _oracle, uint _timelimit, uint _reward, string memory _params) {
+    constructor(address _creator, address _oracle, uint _timelimit, uint _reward, string memory _params) {
 
         // SET REFERENCES
         creator = _creator;
