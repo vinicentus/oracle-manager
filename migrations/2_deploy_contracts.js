@@ -1,14 +1,11 @@
-const contracts = [
-    'UserManager',
-    'OracleManager',
-    'TaskManager',
-    'TokenManager',
-]
+var OracleManager = artifacts.require('OracleManager');
+var TaskManager = artifacts.require('TaskManager');
+var TokenManager = artifacts.require('TokenManager');
+var UserManager = artifacts.require('UserManager');
 
-module.exports = (deployer) => {
-    contracts.forEach(path => {
-        deployer.deploy(
-            artifacts.require('./contracts/' + path + '.sol')
-        )
-    })
+module.exports = async function (deployer) {
+    await deployer.deploy(OracleManager)
+    await deployer.deploy(TaskManager)
+    await deployer.deploy(TokenManager)
+    await deployer.deploy(UserManager)
 }
